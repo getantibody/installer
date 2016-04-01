@@ -1,0 +1,23 @@
+#!/bin/sh
+DOWNLOAD_URL="https://github.com/getantibody/antibody/releases/download"
+
+version() {
+  curl -s https://api.github.com/repos/getantibody/antibody/releases |
+    grep tag_name |
+    head -n1 |
+    cut -f4 -d '"'
+}
+
+download() {
+  wget -c -O "/tmp/antibody.tar.gz" \
+    "$DOWNLOAD_URL/$(version)/antibody_$(uname -s)_$(uname -m).tar.gz"
+}
+
+extract() {
+  tar -xf /tmp/antibody.tar.gz -C "$TMPDIR"
+}
+
+download
+extract || true
+sudo mv /tmp/antibody /usr/local/bin/antibody
+which antibody
