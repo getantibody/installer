@@ -7,5 +7,6 @@ install:
   - ./build/install.sh
 script:
   - ./build/build.sh
+  - ./install
 notifications:
   email: false
