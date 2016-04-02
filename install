@@ -1,5 +1,6 @@
 #!/bin/sh
 DOWNLOAD_URL="https://github.com/getantibody/antibody/releases/download"
+test -z "$TMPDIR" && TMPDIR="$(mktemp -d)"
 
 version() {
   curl -s https://api.github.com/repos/getantibody/antibody/releases |
