@@ -15,6 +15,10 @@ version() {
 
 download() {
   local version="$(version)"
+  test -z "$version" && {
+    echo "Unable to get antibody version through GitHub API." >&2
+    exit 1
+  }
   echo "Downloading antibody $version for $(uname -s)_$(uname -m)..."
   command curl -sL -o /tmp/antibody.tar.gz \
     "$DOWNLOAD_URL/$version/antibody_$(uname -s)_$(uname -m).tar.gz"
