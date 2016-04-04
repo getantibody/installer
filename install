@@ -17,7 +17,7 @@ last_version() {
 download() {
   version="$(last_version)"
   test -z "$version" && {
-    echo "Unable to get antibody version through GitHub API." >&2
+    echo "Unable to get antibody version through GitHub API."
     exit 1
   }
   echo "Downloading antibody $version for $(uname -s)_$(uname -m)..."
