@@ -1,12 +1,13 @@
-#!/bin/sh
+#!/bin/bash
 set -eo pipefail
 DOWNLOAD_URL="https://github.com/getantibody/antibody/releases/download"
 test -z "$TMPDIR" && TMPDIR="$(mktemp -d)"
 
+# shellcheck disable=SC2139
 test -n "$GITHUB_TOKEN" &&
   alias curl="curl -H 'Authorization: Bearer $GITHUB_TOKEN'"
 
-version() {
+last_version() {
   curl -s https://api.github.com/repos/getantibody/antibody/releases |
     grep tag_name |
     head -n1 |
@@ -14,9 +15,9 @@ version() {
 }
 
 download() {
-  local version="$(version)"
+  version="$(last_version)" || true
   test -z "$version" && {
-    echo "Unable to get antibody version through GitHub API." >&2
+    echo "Unable to get antibody version through GitHub API."
     exit 1
   }
   echo "Downloading antibody $version for $(uname -s)_$(uname -m)..."
