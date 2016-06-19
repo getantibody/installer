@@ -17,7 +17,7 @@ download() {
   }
   echo "Downloading antibody $version for $(uname -s)_$(uname -m)..."
   rm -f /tmp/antibody.tar.gz
-  curl -L -o /tmp/antibody.tar.gz \
+  curl -s -L -o /tmp/antibody.tar.gz \
     "$DOWNLOAD_URL/v$version/antibody_$(uname -s)_$(uname -m).tar.gz"
 }
 
