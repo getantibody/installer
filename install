@@ -5,8 +5,8 @@ test -z "$TMPDIR" && TMPDIR="$(mktemp -d)"
 
 last_version() {
   curl -s https://raw.githubusercontent.com/getantibody/homebrew-antibody/master/antibody.rb |
-    grep version |
-    cut -f2 -d '"'
+    grep url |
+    cut -f8 -d'/'
 }
 
 download() {
@@ -18,7 +18,7 @@ download() {
   echo "Downloading antibody $version for $(uname -s)_$(uname -m)..."
   rm -f /tmp/antibody.tar.gz
   curl -s -L -o /tmp/antibody.tar.gz \
-    "$DOWNLOAD_URL/v$version/antibody_$(uname -s)_$(uname -m).tar.gz"
+    "$DOWNLOAD_URL/$version/antibody_$(uname -s)_$(uname -m).tar.gz"
 }
 
 extract() {
