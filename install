@@ -3,22 +3,27 @@ set -e
 DOWNLOAD_URL="https://github.com/getantibody/antibody/releases/download"
 test -z "$TMPDIR" && TMPDIR="$(mktemp -d)"
 
+die() {
+  echo "$1"
+  exit 1
+}
+
 last_version() {
-  curl -s https://raw.githubusercontent.com/getantibody/homebrew-tap/master/Formula/antibody.rb |
-    grep url |
-    cut -f8 -d'/'
+  curl -s https://api.github.com/repos/getantibody/antibody/releases/latest |
+    grep "\"tag_name\":" |
+    sed -E "s/.*\"([^\"]+)\".*/\1/"
 }
 
 download() {
+  os=$(uname -s)
+  arch=$(uname -m)
   version="$(last_version)" || true
-  test -z "$version" && {
-    echo "Unable to get antibody version."
-    exit 1
-  }
-  echo "Downloading antibody $version for $(uname -s)_$(uname -m)..."
+  test -z "$version" && die "Unable to get antibody version."
+  echo "Downloading antibody $version for ${os}_${arch}..."
   rm -f /tmp/antibody.tar.gz
-  curl -s -L -o /tmp/antibody.tar.gz \
-    "$DOWNLOAD_URL/$version/antibody_$(uname -s)_$(uname -m).tar.gz"
+  curl -s -f -L -o /tmp/antibody.tar.gz \
+    "$DOWNLOAD_URL/$version/antibody_${os}_${arch}.tar.gz" ||
+      die "Download failed."
 }
 
 extract() {
