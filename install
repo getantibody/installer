@@ -25,7 +25,11 @@ extract() {
   tar -xf /tmp/antibody.tar.gz -C "$TMPDIR"
 }
 
-download
-extract || true
-sudo mv -f "$TMPDIR"/antibody /usr/local/bin/antibody
-which antibody
+main() {
+  download
+  extract || true
+  sudo install "$TMPDIR"/antibody /usr/local/bin/
+  which antibody
+}
+
+main
