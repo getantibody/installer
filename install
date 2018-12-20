@@ -4,13 +4,13 @@ DOWNLOAD_URL="https://github.com/getantibody/antibody/releases/download"
 test -z "$TMPDIR" && TMPDIR="$(mktemp -d)"
 
 last_version() {
-  curl -s https://raw.githubusercontent.com/getantibody/homebrew-tap/master/Formula/antibody.rb |
-    grep url |
-    cut -f8 -d'/'
+  curl -s https://api.github.com/repos/getantibody/antibody/releases | 
+    grep -m 1 -Po '"tag_name":[\s]*?"\K(.*?[v\.0-9])(?=",)'
 }
 
 download() {
   version="$(last_version)" || true
+  echo "Latest antibody version: $version"
   test -z "$version" && {
     echo "Unable to get antibody version."
     exit 1
@@ -28,4 +28,4 @@ extract() {
 download
 extract || true
 sudo mv -f "$TMPDIR"/antibody /usr/local/bin/antibody
-which antibody
+command -v antibody
