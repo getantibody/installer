@@ -15,10 +15,14 @@ download() {
     echo "Unable to get antibody version."
     exit 1
   }
-  echo "Downloading antibody $version for $(uname -s)_$(uname -m)..."
+  uname_arch="$(uname -m)"
+  if echo "$uname_arch" | grep -q 'armv'; then
+    uname_arch="$(echo "$uname_arch" | grep -Po 'armv[0-9]*')"
+  fi
+  echo "Downloading antibody $version for $(uname -s)_$uname_arch..."
   rm -f /tmp/antibody.tar.gz
   curl -s -L -o /tmp/antibody.tar.gz \
-    "$DOWNLOAD_URL/$version/antibody_$(uname -s)_$(uname -m).tar.gz"
+    "$DOWNLOAD_URL/$version/antibody_$(uname -s)_$uname_arch.tar.gz"
 }
 
 extract() {
@@ -28,4 +32,4 @@ extract() {
 download
 extract || true
 sudo mv -f "$TMPDIR"/antibody /usr/local/bin/antibody
-which antibody
+command -v antibody
